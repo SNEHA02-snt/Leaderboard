@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Champions of Fun Friday Leaderboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background: #0f2027;
+            color: #fff;
+        }
+        canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+        }
+        h2 {
+            text-align: center;
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 0 auto 40px auto;
+            width: 95%;
+            background: white;
+            color: black;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+        }
+        th { background-color: #f2f2f2; font-weight: bold; }
+
+        .gold { background: #FFD700; }
+        .silver { background: #C0C0C0; }
+        .bronze { background: #CD7F32; }
+        .rank-4-10 { background: #e1f5fe; } /* Light Blue */
+        .rank-11-20 { background: #fff3e0; } /* Light Orange */
+        .rank-21-30 { background: #f3e5f5; } /* Light Purple */
+        .rank-31-38 { background: #e8f5e9; } /* Light Green */
+    </style>
+</head>
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<h2>Champions of Fun Friday 🏆</h2>
+
+<table id="leaderboard">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Score</th>
+            <th>Ludo</th>
+            <th>Chess</th>
+            <th>Carom</th>
+            <th>Tambola</th>
+            <th>Jenga</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+// Leaderboard Data
+const leaderboardData = [
+["🥇 Rank 1","Vibha",3,1,0,0,2,0],
+["🥈 Rank 2","Naresh Malik",3,0,0,0,3,0],
+["🥉 Rank 3","PRADEEP",2,0,0,1,1,0],
+["Rank 4","Ravi",2,0,0,1,1,0],
+["Rank 5","Dhananjay",2,0,1,0,1,0],
+["Rank 6","Dolphy",2,2,0,0,0,0],
+["Rank 7","Daman Mehta",2,0,0,0,0,2],
+["Rank 8","Puskar Nath",2,0,0,1,1,0],
+["Rank 9","Nishant Kumar",2,0,1,0,0,1],
+["Rank 10","Subhash",2,0,0,1,1,0],
+["Rank 11","Mayank Agarwal",2,1,0,1,0,0],
+["Rank 12","Binod Kumar",1,1,0,0,0,0],
+["Rank 13","Narender",1,0,0,1,0,0],
+["Rank 14","Tushar",1,0,0,1,0,0],
+["Rank 15","Neeraj",1,1,0,0,0,0],
+["Rank 16","Bhawna Sharma",1,0,0,1,0,0],
+["Rank 17","Jasleen Kaur",1,0,0,0,0,1],
+["Rank 18","Rohan Mehta",1,0,0,0,1,0],
+["Rank 19","Bhawna Gupta",1,0,0,0,1,0],
+["Rank 20","Gunjan",1,0,0,0,1,0],
+["Rank 21","Vaibhav Gupta",1,0,1,0,0,0],
+["Rank 22","Manoj Singh",1,0,1,0,0,0],
+["Rank 23","Munna Sha",1,0,0,1,0,0],
+["Rank 24","Manoj Kumar",1,0,0,0,0,1],
+["Rank 25","Kanchan Verma",1,0,0,0,1,0],
+["Rank 26","Jyoti",1,0,0,1,0,0],
+["Rank 27","Priya",1,0,0,1,0,0],
+["Rank 28","Apurva",1,0,0,1,0,0],
+["Rank 29","Geetanjali",1,0,1,0,0,0],
+["Rank 30","Jitendra Tank",1,0,0,0,0,1],
+["Rank 31","Pooja Mehta",1,1,0,0,0,0],
+["Rank 32","Preeti Yadav",0,0,0,0,0,0],
+["Rank 33","Mohan",0,0,0,0,0,0],
+["Rank 34","Ashmeet Kaur",0,0,0,0,0,0],
+["Rank 35","Komal",0,0,0,0,0,0],
+["Rank 36","Sunil Pal",0,0,0,0,0,0],
+["Rank 37","Abhinav",0,0,0,0,0,0],
+["Rank 38","Gagan Bhatia",0,0,0,0,0,0]
+];
+
+// Populate Table
+const tbody = document.querySelector("tbody");
+leaderboardData.forEach(row => {
+    const tr = document.createElement("tr");
+    const rank = parseInt(row[0].replace(/\D/g, ''));
+
+    if(rank === 1) tr.classList.add('gold');
+    else if(rank === 2) tr.classList.add('silver');
+    else if(rank === 3) tr.classList.add('bronze');
+    else if(rank >= 4 && rank <= 10) tr.classList.add('rank-4-10');
+    else if(rank >= 11 && rank <= 20) tr.classList.add('rank-11-20');
+    else if(rank >= 21 && rank <= 30) tr.classList.add('rank-21-30');
+    else tr.classList.add('rank-31-38');
+
+    row.forEach(cell => {
+        const td = document.createElement("td");
+        td.textContent = cell;
+        tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+});
+
+// Fireworks
+const canvas = document.getElementById('fireworks');
+const ctx = canvas.getContext('2d');
+let width = window.innerWidth, height = window.innerHeight;
+canvas.width = width; canvas.height = height;
+window.addEventListener('resize', ()=>{ width=window.innerWidth;height=window.innerHeight;canvas.width=width;canvas.height=height; });
+
+const particles = [];
+
+function Firework() {
+    this.x = Math.random() * width;
+    this.y = height;
+    this.targetY = Math.random() * height * 0.5;
+    this.color = `hsl(${Math.random()*360},100%,70%)`;
+    this.speed = 5 + Math.random() * 3;
+    this.exploded = false;
+}
+
+function Particle(x,y,color) {
+    this.x = x; this.y = y;
+    this.angle = Math.random() * 2 * Math.PI;
+    this.speed = Math.random() * 5 + 2;
+    this.alpha = 1;
+    this.color = color;
+}
+
+let fireworks = [];
+
+function animate() {
+    ctx.fillStyle = "rgba(0,0,0,0.15)";
+    ctx.fillRect(0,0,width,height);
+
+    fireworks.forEach((fw,i)=>{
+        ctx.beginPath();
+        ctx.arc(fw.x,fw.y,4,0,2*Math.PI);
+        ctx.fillStyle=fw.color; ctx.fill();
+        fw.y -= fw.speed;
+        if(fw.y<=fw.targetY && !fw.exploded){
+            fw.exploded=true;
+            for(let j=0;j<80;j++) particles.push(new Particle(fw.x,fw.y,fw.color));
+            fireworks.splice(i,1);
+        }
+    });
+
+    particles.forEach((p,i)=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,2,0,2*Math.PI);
+        ctx.fillStyle=p.color;
+        ctx.globalAlpha=p.alpha;
+        ctx.fill();
+        ctx.globalAlpha=1;
+        p.x += Math.cos(p.angle)*p.speed;
+        p.y += Math.sin(p.angle)*p.speed;
+        p.alpha -= 0.015;
+        if(p.alpha<=0) particles.splice(i,1);
+    });
+
+    if(Math.random()<0.05) fireworks.push(new Firework());
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
